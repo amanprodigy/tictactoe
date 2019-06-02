@@ -45,7 +45,7 @@ let empty_slots = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 let GAME_STATE_MESSAGES = {
   'O': 'Your move!',  // Game state is open
-  'H': 'You have won!',  // Human has son
+  'H': 'You have won!',  // Human has won
   'C': 'Computer has won, May be next time!',  // Computer has won
   'S': 'It is a stalemate. Nobody wins..', // Stalemate, no more moves left
 }
@@ -63,52 +63,52 @@ let win_start = null;
 let win_end = null;
 
 function initializeGrid() {
-    for (let colIdx = 0; colIdx < GRID_LENGTH; colIdx++) {
-        const tempArray = [];
-        for (let rowidx = 0; rowidx < GRID_LENGTH;rowidx++) {
-            tempArray.push(0);
-        }
-        grid.push(tempArray);
+  for (let colIdx = 0; colIdx < GRID_LENGTH; colIdx++) {
+    const tempArray = [];
+    for (let rowidx = 0; rowidx < GRID_LENGTH;rowidx++) {
+      tempArray.push(0);
     }
+    grid.push(tempArray);
+  }
 }
 
 function getRowBoxes(colIdx) {
-    let rowDivs = '';
-    
-    for(let rowIdx=0; rowIdx < GRID_LENGTH ; rowIdx++ ) {
-        let additionalClass = 'darkBackground';
-        let content = '';
-        const sum = colIdx + rowIdx;
-        if (sum%2 === 0) {
-            additionalClass = 'lightBackground'
-        }
-        const gridValue = grid[colIdx][rowIdx];
-        if(gridValue === 1) {
-            content = '<span class="cross">X</span>';
-        }
-        else if (gridValue === 2) {
-            content = '<span class="zero">O</span>';
-        }
-        rowDivs = rowDivs + '<div colIdx="'+ colIdx +'" rowIdx="' + rowIdx + '" class="box ' +
-            additionalClass + '">' + content + '</div>';
+  let rowDivs = '';
+
+  for(let rowIdx=0; rowIdx < GRID_LENGTH ; rowIdx++ ) {
+    let additionalClass = 'darkBackground';
+    let content = '';
+    const sum = colIdx + rowIdx;
+    if (sum%2 === 0) {
+      additionalClass = 'lightBackground'
     }
-    return rowDivs;
+    const gridValue = grid[colIdx][rowIdx];
+    if(gridValue === 1) {
+      content = '<span class="cross">X</span>';
+    }
+    else if (gridValue === 2) {
+      content = '<span class="zero">O</span>';
+    }
+    rowDivs = rowDivs + '<div colIdx="'+ colIdx +'" rowIdx="' + rowIdx + '" class="box ' +
+      additionalClass + '">' + content + '</div>';
+  }
+  return rowDivs;
 }
 
 function getColumns() {
-    let columnDivs = '';
-    for(let colIdx=0; colIdx < GRID_LENGTH; colIdx++) {
-        let coldiv = getRowBoxes(colIdx);
-        coldiv = '<div class="rowStyle">' + coldiv + '</div>';
-        columnDivs = columnDivs + coldiv;
-    }
-    return columnDivs;
+  let columnDivs = '';
+  for(let colIdx=0; colIdx < GRID_LENGTH; colIdx++) {
+    let coldiv = getRowBoxes(colIdx);
+    coldiv = '<div class="rowStyle">' + coldiv + '</div>';
+    columnDivs = columnDivs + coldiv;
+  }
+  return columnDivs;
 }
 
 function renderMainGrid() {
-    const parent = document.getElementById("grid");
-    const columnDivs = getColumns();
-    parent.innerHTML = '<div class="columnsStyle">' + columnDivs + '</div>';
+  const parent = document.getElementById("grid");
+  const columnDivs = getColumns();
+  parent.innerHTML = '<div class="columnsStyle">' + columnDivs + '</div>';
 }
 
 function drawWinningLine(start, end){
@@ -123,25 +123,26 @@ function drawWinningLine(start, end){
   }
 
   // Paint the three coordinates
-    boxes = document.getElementsByClassName("box");
-    for (var i = 0; i < boxes.length; i++) {
-      coordinates = grid_coordinate_mapping[i+1].split(',');
-      x_coord = String(coordinates[0]);
-      y_coord = String(coordinates[1]);
-      if(
-        (x_coord == start.x && y_coord == start.y) ||
-        (x_coord == mid.x && y_coord == mid.y) ||
-        (x_coord == end.x && y_coord == end.y)
-      ){
-        // paint the winning style in this box
-        boxes[i].classList.add('winner');
-      }
+  boxes = document.getElementsByClassName("box");
+  for (var i = 0; i < boxes.length; i++) {
+    coordinates = grid_coordinate_mapping[i+1].split(',');
+    x_coord = String(coordinates[0]);
+    y_coord = String(coordinates[1]);
+    if(
+      (x_coord == start.x && y_coord == start.y) ||
+      (x_coord == mid.x && y_coord == mid.y) ||
+      (x_coord == end.x && y_coord == end.y)
+    ){
+      // paint the winning style in this box
+      boxes[i].classList.add('winner');
     }
-
+  }
 }
 
 function has_someone_won(grid, move){
-  // checking rows
+  /** Check if someone has won the game yet */
+
+  // checking row wise
   for(var i=0; i< 3; i++){
     var count = 0
     for(var j=0; j<3; j++){
@@ -158,7 +159,7 @@ function has_someone_won(grid, move){
     }
   }
 
-  // checking columns
+  // checking column wise
   for(var j=0; j< 3; j++){
     var count = 0
     for(var i=0; i<3; i++){
@@ -175,39 +176,41 @@ function has_someone_won(grid, move){
     }
   }
 
-  // checking top-left to bottom-right diagnol
+  // checking top-left to bottom-right diagonal
   var count = 0
   for(var i=0; i< 3; i++){
     if(grid[i][i] != move)
-        break;
+      break;
     else
-        count += 1;
+      count += 1;
   }
   if(count == 3){
-      win_start = new Coordinate(0, 0);
-      win_end = new Coordinate(2, 2);
-      return true;
+    win_start = new Coordinate(0, 0);
+    win_end = new Coordinate(2, 2);
+    return true;
   }
 
-  // checking bottom-right to top-left diagnol
+  // checking bottom-right to top-left diagonal
   var count = 0
   for(var i=0; i< 3; i++){
     if(grid[i][2-i] != move)
-        break;
+      break;
     else
-        count += 1;
+      count += 1;
   }
   if(count == 3){
-      win_start = new Coordinate(0, 2);
-      win_end = new Coordinate(2, 0);
-      return true;
+    win_start = new Coordinate(0, 2);
+    win_end = new Coordinate(2, 0);
+    return true;
   }
 
 }
 
 function checkgamestate(){
-  // Function to validate the state of the game during runtime
-  // Returns a game state out of 'C', 'H', 'S', 'O'
+  /**
+  * Function to validate the state of the game during runtime
+  * Returns a game state out of 'C', 'H', 'S', 'O' 
+  */
 
   var game_state = 'O';  //default is that game is running
 
@@ -231,13 +234,19 @@ function checkgamestate(){
 }
 
 function randomChoice(arr) {
-    return arr[Math.floor(arr.length * Math.random())];
+  /**
+   * Choose a random item out of an array
+   */
+
+  return arr[Math.floor(arr.length * Math.random())];
 }
 
 function updateGridValues(rowId, colId, newValue){
-  // Function to update the cell value of the grid
-  // based on the move of human or computer
-  
+  /**
+   * Function to update the cell value of the grid
+   * based on the move of human or computerMove
+   */
+
   grid[rowId][colId] = newValue;
 
   // update the empty_slots list by kicking out used slot
@@ -254,7 +263,6 @@ function updateGridValues(rowId, colId, newValue){
   empty_slots.splice(kick_out_index, 1);
 
   game_state = checkgamestate();
-  //console.log(game_state);
 
   // Validate game state
   if(game_state=='C' || game_state == 'H' || game_state == 'S'){
@@ -265,8 +273,11 @@ function updateGridValues(rowId, colId, newValue){
 }
 
 function computerMove(){
-  // Update the grid slot value to 2 if empty
-  // Returns the updated gamestate
+  /**
+   * Update the grid slot value to 2 if empty.
+   * Returns the updated game_state
+   */
+
   var random_slot = randomChoice(empty_slots);
   var coordinate = grid_coordinate_mapping[random_slot].split(',');
   var rowId = coordinate[0];
@@ -277,46 +288,69 @@ function computerMove(){
 
 
 function humanMove(rowId, colId){
-  // Update the grid slot value to 1
-  // Returns the updated gamestate
+  /**
+   * Update the grid slot value to 1.
+   * Returns the updated game_state
+   */
+
   var newValue = 1;
   return updateGridValues(rowId, colId, newValue);
 }
 
 function onBoxClick() {
-  //Transposing the cell index
+  /**
+   * Perform action when human clicks on
+   * an empty cell
+   */
+
+  // Transposing the cell index across the top-down diagonal
   var colId = this.getAttribute("rowIdx");
   var rowId = this.getAttribute("colIdx");
 
   // Actuate human move
   result = humanMove(rowId, colId);
+
+  // If moves are left, let the computer move
   if(result!='H' && result != 'S'){
     result = computerMove();
   }
 
-  // Redraw Grid
+  // Redraw Grid to update the markers
   renderMainGrid();
   addClickHandlers();
 
-  // Paint winning color
+  // Paint winning color in case of a winner
   if(result=='C' || result=='H'){
     drawWinningLine(win_start, win_end);
   }
+
 }
 
 function addClickHandlers() {
-    // Allow click only on empty slots
-    var boxes = document.getElementsByClassName("box");
-    for (var i = 0; i < empty_slots.length; i++) {
-      empty_index = empty_slots[i]-1;
-      boxes[empty_index].addEventListener('click', onBoxClick, false);
-    }
+  /**
+   * Add click event listeners in the cells
+   * of the grid which are empty.
+   */
+
+  var boxes = document.getElementsByClassName("box");
+  for (var i = 0; i < empty_slots.length; i++) {
+    empty_index = empty_slots[i]-1;
+    boxes[empty_index].addEventListener('click', onBoxClick, false);
+  }
+
 }
 
 function flashMessages(game_state='O'){
+  /**
+   * Show messages in a message area
+   * in the HTML
+   */
+
   message = GAME_STATE_MESSAGES[game_state];
+
   // Intentionally left this console message
   console.log(message);
+
   const messageDiv = document.getElementById("messages");
   messageDiv.innerHTML = '<p>'+message+'</p>';
 }
