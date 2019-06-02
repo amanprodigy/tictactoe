@@ -322,6 +322,15 @@ function onBoxClick() {
   // Paint winning color in case of a winner
   if(result=='C' || result=='H'){
     drawWinningLine(win_start, win_end);
+
+    // Remove event listeners from all the boxes
+    // since the game has ended
+    boxes = document.getElementsByClassName('box')
+    for(var i=0; i<boxes.length; i++){
+      box = boxes[i];
+      box.removeEventListener('click', onBoxClick);
+    }
+
   }
 
 }
