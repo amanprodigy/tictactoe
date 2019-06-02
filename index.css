@@ -1,0 +1,83 @@
+.parentTop{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gridTop{
+    border-color: "#f44336";
+    border: 1px solid lightgray;
+    display: flex;
+    flex-direction: column;
+}
+
+.lightBackground {
+    background-color: ghostwhite;
+}
+
+.columnsStyle {
+    display: flex;
+    flex-direction: column;
+}
+
+.rowStyle {
+    display: flex;
+}
+
+.darkBackground {
+    background-color: lightgray;
+}
+
+.box {
+    width: 100;
+    height: 100;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid gray;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
+.messages{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+    background-color: #43492;
+    font-weight: 500;
+    color: seagreen;
+    font-size: x-large;
+}
+
+.refresh{
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+    background-color: #43492;
+}
+
+.cross{
+    color: #f90;
+    font-size: 2.5em;
+    border-radius: 5px;
+    line-height: 100px;
+}
+
+.zero{
+    color: #111;
+    font-size: 2.5em;
+    border-radius: 5px;
+    line-height: 100px;
+}
+.winner{
+    background-color: yellow;
+}
