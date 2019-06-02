@@ -24,9 +24,9 @@ let turn = 'X';
 let GRID_MOVE_CHOICES = [1, 2]  // 1=> player, 2=>computer
 
 /* This provides a convenient way of choosing a grid coordinate
- [1, 4, 7,
-  2, 5, 8,
-  3, 6, 9]
+ ['1', '2', '3',
+  '4', '5', '6',
+  '7', '8', '9']
 */
 let grid_coordinate_mapping = {
   1: '0,0',
